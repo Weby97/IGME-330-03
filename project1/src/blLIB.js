@@ -1,11 +1,6 @@
-console.log("blLIB loaded");
 (function () {
     "use strict";
     let blLIB = {
-        // bool if mask
-        // house number
-        // bool if infected
-
         getRandomColor() {
             const getByte = _ => 55 + Math.round(Math.random() * 200);
             return `rgba(${getByte()},${getByte()},${getByte()},.9)`;
@@ -15,12 +10,13 @@ console.log("blLIB loaded");
             return Math.floor(Math.random() * (max - min + 1)) + min;
         },
 
-        // Helper for saying yes or no to being infected
-        // Keep them in place function
+        getDistance(x1, y1, x2, y2) {
+            return Math.sqrt((Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2)));
+        },
 
         drawRectangle(ctx, x, y, width, height, fillStyle = "black", lineWidth = 0, strokeStyle = "black") {
-            ctx.fillStyle = fillStyle;
             ctx.save();
+            ctx.fillStyle = fillStyle;
             ctx.beginPath();
             ctx.rect(x, y, width, height);
             ctx.closePath();
@@ -30,6 +26,17 @@ console.log("blLIB loaded");
                 ctx.strokeStyle = strokeStyle;
                 ctx.stroke();
             }
+            ctx.restore();
+        },
+
+        drawCircle(ctx, x, y, radius, fillStyle = "gray", startAngle = 0, endAngle = Math.PI * 2, anticlockwise = false) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            ctx.closePath();
+            ctx.fillStyle = fillStyle;
+            ctx.globalAlpha = 1;
+            ctx.fill();
             ctx.restore();
         }
     };
