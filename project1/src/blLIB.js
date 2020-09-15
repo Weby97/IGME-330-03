@@ -2,6 +2,10 @@ console.log("blLIB loaded");
 (function () {
     "use strict";
     let blLIB = {
+        // bool if mask
+        // house number
+        // bool if infected
+
         getRandomColor() {
             const getByte = _ => 55 + Math.round(Math.random() * 200);
             return `rgba(${getByte()},${getByte()},${getByte()},.9)`;
