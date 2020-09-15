@@ -11,6 +11,9 @@ console.log("blLIB loaded");
             return Math.floor(Math.random() * (max - min + 1)) + min;
         },
 
+        // Helper for saying yes or no to being infected
+        // Keep them in place function
+
         drawRectangle(ctx, x, y, width, height, fillStyle = "black", lineWidth = 0, strokeStyle = "black") {
             ctx.fillStyle = fillStyle;
             ctx.save();
