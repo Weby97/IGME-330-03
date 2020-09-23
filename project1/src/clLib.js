@@ -27,9 +27,7 @@
                 }
 
             }
-
-
-
+            aPerson.id = people.length;
             //put into people array
             people.push(aPerson);
 
@@ -52,6 +50,8 @@
 
 
 
+            aPerson.id = people.length;
+
             //put into people array
             people.push(aPerson);
 
@@ -60,16 +60,24 @@
         //RETURNS 2D ARRAY OF XY LOCATIONS FOR A PERSON TO FOLLLOW
         createPath(person) {
 
-            //2d array of xy coordinates
-            let pathArray = [];
+            //2d array of building objects
+            let destinationArray = [];
 
             //how many destinations?
-            let destinations = blLIB.getRandomInt(0, storeCount);
+            let destinationCount = blLIB.getRandomInt(0, storeCount);
 
             //bail early if it's 0
-            if (destinations == 0)
-                return [];
+            if (destinationCount == 0) return [];
 
+            //random store array index number
+            let picker = blLIB.getRandomInt(0, storeCount-1);
+
+            //fetch the store and palce it into the array
+            for (let store of stores) {
+                if (picker == store.number) {
+                    destinationArray.push(store);
+                }
+            }
 
             //find this person's home
             let thisPersonsHome;
@@ -81,31 +89,13 @@
             }
 
 
-            for (let i = 0; i <= destinations - 1; i++) {
 
-                //xy array;
-                let xyPair = [];
+            destinationArray.push(thisPersonsHome);
+            
+            //console.log(destinationArray)
+            return destinationArray;
 
-                //put coords into innerArray
-                for (let store of stores) {
-                    if (store.number == i) {
-                        xyPair.push(store.x + buildingWidth / 2);
-                        xyPair.push(store.y + buildingHeight / 2);
-                    }
-                }
-                //put that in the big array
-                pathArray.push(xyPair);
-            }
-
-            //find coords of home
-            let xyPair = [thisPersonsHome.x + buildingWidth / 2, thisPersonsHome.y + buildingHeight / 2]
-
-
-            //add coords of person's home
-            pathArray.push(xyPair);
-
-            //return the pathArray
-            return pathArray;
+           
 
         },
 
@@ -177,15 +167,15 @@
 
             for (let person of insideBuilding) {
                 if (person.infected && person.hasMask == false) {
-                    spreadChance += .5
+                    spreadChance += .5;
                 } else if (person.infected) {
                     if (person.hasMask) {
-                        spreadChance += .1
+                        spreadChance += .1;
                     }
                 }
             }
 
-            console.log(`spread chance: ${spreadChance} building: ${building.number} building members: ${building.members}`);
+            console.log(`spread chance: ${spreadChance} building: ${building.number} building members: ${building.members.length}`);
 
             if (spreadChance >= 1) {
                 spreadChance = .95
@@ -284,55 +274,76 @@
         },
 
         moveToNextPoint(person) {
+            //building object
+            let destination = person.destinations[0];
 
-            let destinationX = person.destinations[0][0];
-            let destinationY = person.destinations[0][1];
+            //x and y in the top left corner of the building
+            let destinationX = destination.x;
+            let destinationY = destination.y;
+
+            console.log(person.destinations[0])
+            console.log(person.x, destinationX)
+            console.log(person.y, destinationY)
+
+            //building number
+            let destinationNumber = destination.number;
 
             //console.log("person " + person.houseNumber + " is moving to " + destinationX + " " + destinationY)
 
-            if (person.x > destinationX) {
+            if (person.x > (destinationX + (buildingWidth / 2))) {
+                console.log("moving -x")
                 person.x -= 1;
 
-            } else if (person.x < destinationX) {
+            } else if (person.x < (destinationX + (buildingWidth / 2))) {
+                console.log("moving +x")
                 person.x += 1;
             }
 
-            if (person.y > destinationY) {
+            if (person.y > (destinationY + (buildingHeight / 2))) {
+                console.log("moving -y")
                 person.y -= 1;
-            } else if (person.y < destinationY) {
+            } else if (person.y < (destinationY + (buildingHeight / 2))) {
+                console.log("moving y")
                 person.y += 1;
             }
+           
+            if (person.x > destinationX && person.x <= (destinationX + buildingWidth)
+                && person.y > destinationY && person.y <= (destinationY + buildingHeight)) {
 
-            if (person.x == destinationX && person.y == destinationY) {
+                ////push them into the current building
+                //for (let building of buildings) {
+                //    //console.log(building.x, building.y, person.x, person.y)
+                //    //blLIB.drawCircle(ctx,building.x+buildingWidth/2, building.y, 10, "red")
 
-                //push them into the current building
-                for (let building of stores) {
-                    //console.log(building.x, building.y, person.x, person.y)
-                    //blLIB.drawCircle(ctx,building.x+buildingWidth/2, building.y, 10, "red")
+                //    if (building.x + buildingWidth / 2 == person.x && building.y + buildingHeight / 2 == person.y) {
 
-                    if (building.x + buildingWidth / 2 == person.x && building.y + buildingHeight / 2 == person.y) {
+                //        //Put this person into the building
+                //        building.members.push(person);
 
-                        //Put this person into the building
-                        building.members.push(person);
+                //        clLib.moveVirus(building);
 
-                        clLib.moveVirus(building);
+                //        //clear all members arrays
+                //    }
 
-                        //clear all members arrays
-
-                        building.members.splice(0, building.members.length);
-                    }
-
-
-
-
+                //}
+                if (!person.inAStore) {
+                    destination.members.push(person);
+                    person.inAStore = true;
+                    clLib.moveVirus(destination);
                 }
 
-
                 //console.log("Im person "+person.houseNumber+"and I just went to "+destinationX,destinationY)
-                //removes the front element of the person's destination array
-                person.destinations.shift();
-
-
+                //removes the specified person who has reached the center of the building out of the array and onto their next point
+                if (person.x == (destinationX + (buildingWidth / 2)) && person.y == (destinationY + (buildingHeight / 2))) {
+                    person.destinations.shift();
+                    person.inAStore = false;
+                    for (let i = 0; i < destination.members.length; i++) {
+                        if (destination.members[i].id == person.id) {
+                            destination.members.splice(i, 1);
+                        }
+                    }
+                }
+                
 
             }
 
@@ -344,7 +355,6 @@
             //for (let i = 0; i < storeCount; i++) {
 
             for (let person of people) {
-
                 if (person.destinations.length > 0) {
                     clLib.moveToNextPoint(person);
                 }
@@ -380,13 +390,15 @@
 
     //PERSON OBJECT
     class Person {
-        constructor(houseNumber, hasMask, infected) {
+        constructor(houseNumber, hasMask, infected, inAStore = false, id) {
+            this.id = id;
             this.houseNumber = houseNumber;
             this.hasMask = hasMask;
             this.infected = infected;
             this.x = 0;
             this.y = 0;
             this.destinations = [];
+            this.inAStore = inAStore;
         }
 
     }
