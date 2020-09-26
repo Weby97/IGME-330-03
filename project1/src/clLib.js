@@ -1,5 +1,3 @@
-//Chase Lear, Person, Building, makePerson, createPath
-
 (function () {
     'use strict'
     let clLib = {
@@ -32,8 +30,8 @@
             people.push(aPerson);
 
         },
-        
-        makePerson(houseNumber = 1,wearsMask = true,isInfected = false,x=10,y=10) {
+
+        makePerson(houseNumber = 1, wearsMask = true, isInfected = false, x = 10, y = 10) {
 
             //make person
             let aPerson = new clLib.Person(houseNumber, wearsMask, isInfected);
@@ -70,7 +68,7 @@
             if (destinationCount == 0) return [];
 
             //random store array index number
-            let picker = blLIB.getRandomInt(0, storeCount-1);
+            let picker = blLIB.getRandomInt(0, storeCount - 1);
 
             //fetch the store and palce it into the array
             for (let store of stores) {
@@ -88,40 +86,11 @@
                 }
             }
 
-
-
             destinationArray.push(thisPersonsHome);
-            
-            //console.log(destinationArray)
             return destinationArray;
-
-           
-
-        },
-
-        returnHome() {
-
-
-            for (let person of people) {
-
-                for (let home of homes) {
-
-                    if (person.houseNumber.x == home.number) {
-
-                        person.destinations = [[0], [home.x + buildingWidth / 2, home.y + buildingHeight]]
-                    }
-
-                }
-
-
-            }
-
-            movePeople();
-
         },
 
         step() {
-
             //create new paths for each person
             for (let person of people) {
                 person.destinations = clLib.createPath(person);
@@ -149,15 +118,12 @@
         },
 
         clearMembers() {
-
-
             for (let house of homes) {
                 house.members.splice(0, homes.length);
             }
         },
 
         moveVirus(building) {
-            //debugger;
             //maths
             let insideBuilding = building.members;
             let masklessPeople = 0;
@@ -175,37 +141,22 @@
                 }
             }
 
-            console.log(`spread chance: ${spreadChance} building: ${building.number} building members: ${building.members.length}`);
-
             if (spreadChance >= 1) {
-                spreadChance = .95
+                spreadChance = .95;
             };
 
 
             for (let person of insideBuilding) {
                 if (person.infected == false) {
                     let determiner = Math.random().toFixed(2);
-                    console.log(determiner)
-                    //console.log("determiner for person ",person.houseNumber," in building " +building.number+"is "+determiner);
                     if (determiner < spreadChance) {
-
-                        console.log("new infected in store "+building.number)
                         person.infected = true;
-
-                    } else {
-                        console.log("store ",building.number," clear!")
                     }
                 }
             }
-
-
-           // console.log("virus move");
-            //check virus spread
         },
 
         newDay() {
-
-
             //if (going) return;
             going = true;
             clLib.step();
@@ -214,10 +165,14 @@
 
         createBuildings() {
 
+            homes.splice(0, homes.length);
+            stores.splice(0, stores.length);
+            buildings.splice(0, buildings.length);
+
             for (let i = 0; i < homeCount; i++) {
                 let aHome = new Building(xOffset + (i * spacing), homeYOffset, i)
                 homes.push(aHome);
-                buildings.push(aHome)
+                buildings.push(aHome);
 
             }
 
@@ -225,20 +180,20 @@
 
                 let aStore = new Building(xOffset + (i * spacing), storeYOffset, i)
                 stores.push(aStore);
-                buildings.push(aStore)
+                buildings.push(aStore);
             }
 
 
 
             storeCount = stores.length;
             homeCount = homes.length;
-            buildingCount = buildings.length
+            buildingCount = buildings.length;
 
         },
 
         drawMap() {
-            ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-            ctx.fillStyle = "white"
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillStyle = "white";
             ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             for (let home of homes) {
 
@@ -281,58 +236,30 @@
             let destinationX = destination.x;
             let destinationY = destination.y;
 
-            console.log(person.destinations[0])
-            console.log(person.x, destinationX)
-            console.log(person.y, destinationY)
-
             //building number
             let destinationNumber = destination.number;
 
-            //console.log("person " + person.houseNumber + " is moving to " + destinationX + " " + destinationY)
-
             if (person.x > (destinationX + (buildingWidth / 2))) {
-                console.log("moving -x")
                 person.x -= 1;
-
             } else if (person.x < (destinationX + (buildingWidth / 2))) {
-                console.log("moving +x")
                 person.x += 1;
             }
 
             if (person.y > (destinationY + (buildingHeight / 2))) {
-                console.log("moving -y")
                 person.y -= 1;
             } else if (person.y < (destinationY + (buildingHeight / 2))) {
-                console.log("moving y")
                 person.y += 1;
             }
-           
+
             if (person.x > destinationX && person.x <= (destinationX + buildingWidth)
                 && person.y > destinationY && person.y <= (destinationY + buildingHeight)) {
 
-                ////push them into the current building
-                //for (let building of buildings) {
-                //    //console.log(building.x, building.y, person.x, person.y)
-                //    //blLIB.drawCircle(ctx,building.x+buildingWidth/2, building.y, 10, "red")
-
-                //    if (building.x + buildingWidth / 2 == person.x && building.y + buildingHeight / 2 == person.y) {
-
-                //        //Put this person into the building
-                //        building.members.push(person);
-
-                //        clLib.moveVirus(building);
-
-                //        //clear all members arrays
-                //    }
-
-                //}
                 if (!person.inAStore) {
                     destination.members.push(person);
                     person.inAStore = true;
                     clLib.moveVirus(destination);
                 }
 
-                //console.log("Im person "+person.houseNumber+"and I just went to "+destinationX,destinationY)
                 //removes the specified person who has reached the center of the building out of the array and onto their next point
                 if (person.x == (destinationX + (buildingWidth / 2)) && person.y == (destinationY + (buildingHeight / 2))) {
                     person.destinations.shift();
@@ -343,49 +270,38 @@
                         }
                     }
                 }
-                
 
             }
-
-
-
         },
 
         movePeople() {
-            //for (let i = 0; i < storeCount; i++) {
-
             for (let person of people) {
                 if (person.destinations.length > 0) {
                     clLib.moveToNextPoint(person);
                 }
             }
-            //}
-
         },
 
-        logPaths() {
+        //returnHome() {
+        //    for (let person of people) {
+        //        for (let home of homes) {
+        //            if (person.houseNumber.x == home.number) {
+        //                person.destinations = [[0], [home.x + buildingWidth / 2, home.y + buildingHeight]];
+        //            }
+        //        }
+        //    }
+        //    movePeople();
+        //},
 
-            //console.log("Hello World!");
-            for (let person of people) {
-
-                let points = person.destinations;
-
-                //console.log(path) 
-
-                let aString = `Person ${person.houseNumber} will follow these points:`
-
-                for (let i = 0; i < points.length; i++) {
-
-                    aString += ` (${points[i][0] },${points[i][1]}) `
-                }
-
-                //console.log(aString);
-
-
-            }
-
-
-        }
+        //logPaths() {
+        //    for (let person of people) {
+        //        let points = person.destinations;
+        //        let aString = `Person ${person.houseNumber} will follow these points:`
+        //        for (let i = 0; i < points.length; i++) {
+        //            aString += ` (${points[i][0]},${points[i][1]}) `
+        //        }
+        //    }
+        //}
     };
 
     //PERSON OBJECT
@@ -421,6 +337,57 @@
     if (window) {
         window["clLib"] = clLib;
     } else {
+        throw "'window' is not defined!";
+    }
+})();
+
+(function () {
+    "use strict";
+    let blLIB = {
+        getRandomColor() {
+            const getByte = _ => 55 + Math.round(Math.random() * 200);
+            return `rgba(${getByte()},${getByte()},${getByte()},.9)`;
+        },
+
+        getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        },
+
+        getDistance(x1, y1, x2, y2) {
+            return Math.sqrt((Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2)));
+        },
+
+        drawRectangle(ctx, x, y, width, height, fillStyle = "black", lineWidth = 0, strokeStyle = "black") {
+            ctx.save();
+            ctx.fillStyle = fillStyle;
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.closePath();
+            ctx.fill();
+            if (lineWidth > 0) {
+                ctx.lineWidth = lineWidth;
+                ctx.strokeStyle = strokeStyle;
+                ctx.stroke();
+            }
+            ctx.restore();
+        },
+
+        drawCircle(ctx, x, y, radius, fillStyle = "gray", startAngle = 0, endAngle = Math.PI * 2, anticlockwise = false) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            ctx.closePath();
+            ctx.fillStyle = fillStyle;
+            ctx.globalAlpha = 1;
+            ctx.fill();
+            ctx.restore();
+        }
+    };
+
+    if (window) {
+        window["blLIB"] = blLIB
+    }
+    else {
         throw "'window' is not defined!";
     }
 })();
