@@ -2,15 +2,32 @@
 
 //GLOBALS
 let ctx;
+
+//collection of buildings that people return to each day
 let homes = [];
+
+//collection of buildings that people possibly visit each day
 let stores = [];
+
+//collection of all homes and stores in the simulation
 let buildings = [];
+
+//collection of all people in the simulation
 let people = [];
 
+//default amount of people in the simulation at start
 let peopleCount = 4;
+
+//amount of homes in the simulation
 let homeCount = 3;
+
+//amount of stores in the simulation
 let storeCount = 3;
+
+//total amount buildings in simulation
 let buildingCount = homeCount + storeCount;
+
+//update() function stopper
 let paused = false;
 
 // To Make a Person Options
@@ -19,14 +36,16 @@ let wearsMask = false;
 let isInfected = false;
 let random = false;
 
+//measurements for display
 const canvasWidth = 750;
 const canvasHeight = 500;
-const spacing = 150;
-const xOffset = 50;
+const spacing = canvasWidth/6;
+const xOffset = 60;
 const homeYOffset = 50;
 const storeYOffset = 400;
 const buildingWidth = 100;
 const buildingHeight = 50;
+const personCircleSize = 10;
 
 // UI Elements
 let storeSlider;
@@ -43,35 +62,53 @@ let houseNumInput;
 let makePersonBtn;
 let resetBtn;
 
-let going = false;
+let UIArray;
+
+//UI disabler
+let UIEnabled = true;
+
+let mousePos;
+
+let mouseX;
+let mouseY;
+
 
 //time between steps
 const stepTime = 3000;
 
 window.onload = init;
 
+
+
+
+
+
 function init() {
     let canvas = document.querySelector('canvas');
     ctx = canvas.getContext("2d");
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    ctx.fillStyle = "white";
+    
+
+    ctx.fillStyle = "grey";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     // UI Setup
-    storeSlider = document.querySelector("#storeNumSlider");
-    storeOutput = document.querySelector("#storeValue");
+    let storeSlider = document.querySelector("#storeNumSlider");
+    let storeOutput = document.querySelector("#storeValue");
 
-    homeSlider = document.querySelector("#homeNumSlider");
-    homeOutput = document.querySelector("#homeValue");
+    let homeSlider = document.querySelector("#homeNumSlider");
+    let homeOutput = document.querySelector("#homeValue");
 
-    randomCheckmark = document.querySelector("#randomCheck");
-    maskCheckmark = document.querySelector("#maskCheck");
-    infectedCheckmark = document.querySelector("#infectedCheck");
-    houseNumInput = document.querySelector("#houseNum");
+    let randomCheckmark = document.querySelector("#randomCheck");
+    let maskCheckmark = document.querySelector("#maskCheck");
+    let infectedCheckmark = document.querySelector("#infectedCheck");
+    let houseNumInput = document.querySelector("#houseNum");
 
-    makePersonBtn = document.querySelector("#personButton");
-    resetBtn = document.querySelector("#resetButton");
+    let makePersonBtn = document.querySelector("#personButton");
+    let resetBtn = document.querySelector("#resetButton");
+    let nextDayButton = document.querySelector("#nextButton");
+    let clearPeople = document.querySelector("#clearPeople");
 
     homeCount = homeSlider.value;
     storeCount = storeSlider.value;
@@ -80,11 +117,14 @@ function init() {
     isInfected = infectedCheckmark.checked;
     houseNumber = houseNumInput.value;
 
+
+    UIArray = [storeSlider, storeOutput, homeSlider, homeOutput, randomCheckmark, maskCheckmark, infectedCheckmark, houseNumInput, makePersonBtn, resetBtn, nextDayButton]
+
     clLib.createBuildings();
     clLib.drawMap();
 
     // Display the default slider value
-    storeOutput.innerHTML = storeSlider.value; 
+    storeOutput.innerHTML = storeSlider.value;
     homeOutput.innerHTML = homeSlider.value;
 
     // Update the current sliders values (each time you drag the slider handle)
@@ -142,8 +182,7 @@ function init() {
     makePersonBtn.onclick = function () {
         if (random) {
             clLib.makeRandomPerson();
-        }
-        else {
+        } else {
             clLib.makePerson(houseNumber - 1, wearsMask, isInfected);
         }
         peopleCount++;
@@ -153,9 +192,10 @@ function init() {
     resetBtn.onclick = function () {
         history.go(0);
     }
+    
+    clearPeople.addEventListener("click",clLib.clearPeople);
 
-
-    document.querySelector("#nextButton").addEventListener("click", clLib.newDay);
+    nextDayButton.addEventListener("click", clLib.newDay);
 
     //    //starting people
     for (let i = 0; i < peopleCount; i++) {
@@ -163,21 +203,34 @@ function init() {
         clLib.makeRandomPerson();
 
         paused = false;
-        
+
         update();
     }
-    
+
 }
-    function update() {
 
-        if (paused) return;
-        requestAnimationFrame(update);
-        clLib.drawMap();
-        clLib.movePeople();
-        clLib.drawPeople();
-        //console.log(people[2].destinations[0]);
-        //console.log(canvas.mouseX)
-        //if(boolean) step();
-        //console.log("updating")
+function update() {
 
+    if (paused) return;
+    requestAnimationFrame(update);
+
+
+    for (let UI of UIArray) {
+
+        if (!UIEnabled) {
+            UI.disabled = true;
+        } else {
+            UI.disabled = false;
+        }
     }
+
+
+    clLib.drawMap();
+    clLib.movePeople();
+    clLib.drawPeople();
+
+}
+//console.log(people[2].destinations[0]);
+//console.log(canvas.mouseX)
+//if(boolean) step();
+//console.log("updating")

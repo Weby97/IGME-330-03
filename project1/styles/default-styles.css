@@ -1,82 +1,138 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&display=swap');
+
 * {
     font-family: 'Baloo Tammudu 2', cursive;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+
+}
+
+body {
+    display: grid;
+    background-color: #111111;
+    width: 100vw;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
+    align-items: flex-start;
+    grid-template-areas:
+        "header header header"
+        "main sidebar sidebar"
+        "footer footer footer";
+    padding-left: 2vw;
+    padding-right: 2vw;
+color:coral;
+
+}
+
+
+header {
+    grid-area: header;
+}
+
+canvas {
+    grid-area: main;
+    border: 1px solid black;
+    margin: none;
+    padding: none;
 }
 
 h1 {
-    position: relative;
-    padding-left: 2em;
-    background-color: coral;
+    /*    position: relative;*/
+    /*    padding-left: 2em;*/
+    margin-bottom: 1rem;
+        background-color: coral;
     text-align: center;
+    color:black;
 }
 
-button, input {
-    font-size: 1.2em;
+h2 {
+
+    margin: 2%;
+    margin-left: 0px;
+    padding: 0px;
 }
 
-li {
-    margin-bottom: 1em;
+h5 {
+    color: white;
+    font-size: 1rem;
+    width: 100%;
 }
 
-p {
-    margin-bottom: 6px;
+#sidebar {
+    display: block;
+    margin-left: 50px;
+    height: 500px;
+    grid-area: 'sidebar';
+    text-align: right;
+    widows: 200px;
 }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    padding-left: 1em;
-    grid-gap: 10px;
-    background-color: #edf6f9;
+#instructions {
+    grid-area: footer;
+    display: block;
+
 }
 
-#internalBox {
-    width: 20%;
-    height: 40%;
+#makePerson {}
+#personButton{
+
+}
+.internalBox {
+    height: auto;
+
+    margin: 0px;
+    width: 100%;
+
 }
 
 .buttonStyle {
-    margin-top: 1em;
-    margin-left: 1em;
+    text-align: center;
+    padding: 1em;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    
 }
 
 /* The slider itself */
 .slider {
-    -webkit-appearance: none; /* Override default CSS styles */
-    width: 95%; /* Specified width */
-    height: 5px; /* Specified height */
-    border-radius: 5px;
-    background: #d3d3d3; /* Grey background */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    -webkit-appearance: none;
+    width: 100%;
+
+    height: .7rem;
+    background: #666666;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 
 /* Mouse-over effects */
 .slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
+    opacity: 1;
+
+    /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
-    width: 20px; /* Set a specific slider handle width */
-    height: 20px; /* Slider handle height */
-    background: #2f4f4f; /* darkslategrey background */
-    cursor: pointer; /* Cursor on hover */
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: coral;
+    cursor: pointer;
 }
 
+
+
 #homeNumSlider::-webkit-slider-thumb {
-    background: #808080; /* darkslategrey background */
+    background: coral;
+    /* darkslategrey background */
 }
 
 input[type=number]::-webkit-inner-spin-button {
     opacity: 1;
 }
 
-input[type=number]{
-    width: 20%;
-    height: 15%;
-}
+input[type=number] {}

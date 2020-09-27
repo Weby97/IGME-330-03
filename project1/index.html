@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <title>Wear a Mask Simulation</title>
@@ -7,52 +8,58 @@
     <script src="src/cbLIB.js"></script>
     <script src="src/index.js"></script>
 </head>
+
 <body>
-    <h1>Wear a Mask Simulation</h1>
-    <canvas>
-    </canvas>
-    <section class="container">
-        <div class="internalBox">
-            <p>Number of Houses: <span id="homeValue"></span></p>
+    <header>
+        <h1>Wear a Mask Simulation</h1>
+    </header>
+
+    <canvas></canvas>
+    <section id='sidebar' class="container">
+
+        <div class='internalBox' id="buttonBox">
+            <button class="buttonStyle" id="nextButton">Next Day</button>
+            <button class="buttonStyle" id="resetButton" value="Refresh">Reset</button>
+            <button class="buttonStyle" id="clearPeople" value="Refresh">Clear People</button>
+        </div>
+
+        <div class="internalBox" class="sliders">
+            <h5>Number of Houses: <span id="homeValue"></span></h5>
             <input type="range" min="3" max="5" value="3" class="slider" id="homeNumSlider">
-            <p>Number of Stores: <span id="storeValue"></span></p>
+            <h5>Number of Stores: <span id="storeValue"></span></h5>
             <input type="range" min="1" max="5" value="3" class="slider" id="storeNumSlider">
         </div>
 
-        <div class="internalBox">
-            <p>Options for People:</p>
-            Random? <input type="checkbox" id="randomCheck">
-            <br/>
-            Wears a Mask? <input type="checkbox" id="maskCheck">
-            <br/>
-            Infected? <input type="checkbox" id="infectedCheck">
-            <br/>
-            House Number: <input type="number" id="houseNum" min="1" max = "3" value="1">
+        <h5>Options for new person:</h5>
+        <div class="internalBox" class="makePerson">
+            <div>Random? <input type="checkbox" id="randomCheck"></div>
+            <div>Wears a Mask? <input type="checkbox" id="maskCheck"></div>
+            <div>Infected? <input type="checkbox" id="infectedCheck"></div>
+            <div>House Number: <input type="number" id="houseNum" min="1" max="3" value="1"></div>
+            
         </div>
+        
+        <button class="buttonStyle" id="personButton">Create Person</button>
 
-        <div class="internalBox">
-            <button class="buttonStyle" id="personButton">Create Person</button>
-            <br />
-            <button class="buttonStyle" id="nextButton">Next Day</button>
-            <br />
-            <button class="buttonStyle" id="resetButton" value="Refresh">Reset</button>
-        </div>
     </section>
-    <section class="container">
+
+    <section id='instructions' class="container">
         <div class="internalBox">
             <h2>Instructions:</h2>
             <p>
                 Click the 'Next Day' button to have the people run their errands of the day!
                 See what happens when people go out with and without a mask.
                 Those who are infected, have a 95% of passing the virus onto other.
-                With a mask on, their infection rate decreases to just 10%! We wanted to show the importance of everyone 
+                With a mask on, their infection rate decreases to just 10%! We wanted to show the importance of everyone
                 wearing a mask. Masks help prevent others from catching the virus, but it won't help you. It has to be a team effort.<br /><br />
-                You can add new people to the scene with the tools provided. 
+                You can add new people to the scene with the tools provided.
                 If you select random, all options will be randomized each time you click the 'Create Person' button.
                 Otherwise, the options you choose will create your person.<br /><br />
                 Reset will refresh the options and the simulation.
             </p>
         </div>
     </section>
+
 </body>
+
 </html>
